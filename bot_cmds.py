@@ -24,7 +24,7 @@ class _GD:
             storage = dict(json.loads(f.read()))
 
         storage.update(_GD.temp_store)
-        
+
         with open(BOTDATA, 'w') as f:
             f.write(json.dumps(storage))
         _GD.temp_store = {}

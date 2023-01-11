@@ -50,7 +50,7 @@ async def syncCMDs(channel: discord.TextChannel):
     logger.info('Started syncing all messages in communication channel')
     print('Started syncing all messages in communcation channel')
     async for message in messages:
-        content = message.content.replace('\n', '').split(';')
+        content = message.content.replace('\n', '').replace(' ','').split(';')
 
         # iterate on every command, make sure is not a comment
         if (not message.content.startswith('#!')):
