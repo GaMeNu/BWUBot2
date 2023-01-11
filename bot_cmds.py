@@ -29,7 +29,7 @@ class _GD:
             f.write(json.dumps(storage))
         _GD.temp_store = {}
 
-#Master class Runner provides way to run all registered commands
+#Master class Run provides a way for running all commands from the main file
 class Run:
 #Master function for determining the command
     async def run_command(cmd: str):
