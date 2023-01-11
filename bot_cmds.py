@@ -11,7 +11,7 @@ class _GD:
     #Add blocks to temporary memory
     @staticmethod
     def register_block(cmd: str):
-        #RegisterBlock([num,num,num]:PlayerName)
+        #RegisterBlock([num,num,num]:"PlayerName")
         cmdblck = cmd[1:-1:].split(':')
         cmdblck[1] = cmdblck[1][1:-1:]
         _GD.temp_store[cmdblck[0]] = cmdblck[1]
@@ -29,7 +29,7 @@ class _GD:
             f.write(json.dumps(storage))
         _GD.temp_store = {}
 
-#Master class Runner provides
+#Master class Runner provides way to run all registered commands
 class Run:
 #Master function for determining the command
     async def run_command(cmd: str):
