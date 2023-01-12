@@ -10,6 +10,7 @@ from discord import app_commands
 from dotenv import load_dotenv
 import json
 import logging
+import math
 import os
 import time as t
 
@@ -18,7 +19,7 @@ load_dotenv()
 TOKEN = os.getenv('BWU_DISCORD_TOKEN')
 GUILD = int(os.getenv('DISCORD_GUILD'))
 COMM_CHANNEL = int(os.getenv('DF_COMMUNICATION_CHANNEL'))
-BOTDATA = os.getenv('GD_STORAGE_PATH')
+JSON_PATH = os.getenv('GD_STORAGE_PATH')
 VERSION = os.getenv('VERSION')
 
 # bot setup
@@ -30,17 +31,22 @@ comm_channel: discord.TextChannel = bot.get_channel(COMM_CHANNEL)
 logger = logging.Logger(name='BWUBot',level=logging.INFO)
 logger.setLevel(logging.DEBUG)
 
+temp_store = {}
 
+def load_json_to_store():
+    global temp_store
 
-try:
-    with open(BOTDATA, 'r') as f:
-        temp_store = json.loads(f.read())
-except:
-    with open(BOTDATA, 'w') as f:
-        f.write(json.dumps({}))
+    try:
+        with open(JSON_PATH, 'r') as f:
+            temp_store = json.loads(f.read())
+    
+    except:
+        logger.critical(f'ERROR: Cannot find storage file at path {JSON_PATH}!')
+    
+    else:
+        logger.info(f'Successfully loaded JSON file from path {JSON_PATH}')
 
-
-async def syncCMDs(channel: discord.TextChannel):
+async def sync_commands(channel: discord.TextChannel):
 
     # Iterate on every message in channel history, get all commands, and send them. Then delete the original message.
     # P A I N
@@ -73,12 +79,23 @@ async def sync(intr: discord.Interaction):
 
     await intr.response.defer()
     await intr.channel.send('#! Begun syncing!', delete_after=3)
-    await syncCMDs(intr.channel)
+    await sync_commands(intr.channel)
     await intr.channel.send('#! Done syncing!', delete_after=3)
 
+
+@tree.command(name='gd-search',description='Search for a location to get the player that last placed a block in that location')
+async def gd_search(intr: discord.Interaction, x: float, y: float, z: float):
+    global temp_store
+    loc = f'[{math.floor(x)},{math.floor(y)},{math.floor(z)}]'
+    load_json_to_store()
+
+    if not loc in temp_store.keys():
+        await intr.response.send_message(f'There doesn\'t seem to be any player saved to location **{loc}**.')
+    else:
+        await intr.response.send_message(f'The last player to modify the block at location **{loc}** is **{temp_store[loc]}**')
+
+
 # on_ready event,
-
-
 @bot.event
 async def on_ready():
     global guild
@@ -90,18 +107,20 @@ async def on_ready():
 
     #Sync on online
     await comm_channel.send('#! Begun syncing!', delete_after=3)
-    await syncCMDs(comm_channel)
+    await sync_commands(comm_channel)
     await comm_channel.send('#! Done syncing!', delete_after=3)
 
 
 @bot.event
 async def on_message(msg: discord.Message):
     if msg.channel.id == COMM_CHANNEL and msg.author != bot.user:
-        await syncCMDs(msg.channel)
+        await sync_commands(msg.channel)
 
+
+load_json_to_store()
 
 print(f'Welcome, and thank you for using BWUBot version 2!')
 print(f'BWUBot version {VERSION}')
 print(f'Made by GaMeNu')
-print('WARNING: This is not yet ready as a functional piece! Please do not run this as the Grief Detector!')
+logger.warning('WARNING: This is not yet ready as a functional piece! Please do not run this as the Grief Detector!')
 bot.run(TOKEN)
