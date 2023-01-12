@@ -9,5 +9,5 @@ DF_COMMUNICATION_CHANNEL = <Your Discord communication channel ID (Where message
 
 GD_STORAGE_PATH = <Path to json storage file on your computer>/gd_storage.json
 
-VERSION = 2.0.0 - 0.1.1 TR
+VERSION = 2.0.0 - 0.2.0 TR
 ```
