@@ -1,5 +1,5 @@
 # BWUBot2
-Version 2 of BWU bot, supporting more Discord integration and fully rewritten using discord.py 2.1's slash-commands
+Version 2 of BWU bot, supporting more Plot to Discord integration and fully rewritten using discord.py 2.1's slash-commands
 
 ## .env setup:
 ```
