@@ -1,4 +1,7 @@
-# BWUBot2
+# BWUBot2 - DEPRECATED
+**This version of BWUBot has been deprecated! See the GDBot repository instead.**
+This version is deprecated due to poor design, using a large JSON file. GDv3 will most likely use a relational database.
+
 Version 2 of BWU bot, supporting more Plot to Discord integration and fully rewritten using discord.py 2.1's slash-commands
 
 ## .env setup:
